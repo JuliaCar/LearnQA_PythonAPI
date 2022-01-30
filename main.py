@@ -1,1 +1,6 @@
-print('Hello from Julia')
+import requests
+
+response = requests.get('https://playground.learnqa.ru/api/get_text')
+print(response)
+
+# print('Hello from Julia')
