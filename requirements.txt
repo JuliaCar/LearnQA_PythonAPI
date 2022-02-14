@@ -1,4 +1,6 @@
+allure-pytest
 requests
 pytest
-allure-pytest
+
+
 
