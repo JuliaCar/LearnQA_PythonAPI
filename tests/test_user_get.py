@@ -1,18 +1,21 @@
-import pytest
+import allure
+
 from lib.my_requests import MyRequests
 from lib.base_case import BaseCase
 from lib.assertions import Assertions
 
 class TestUserGet(BaseCase):
+    @allure.description("Get user info without authorized request")
     def test_get_user_details_not_auth(self):
         response = MyRequests.get("/user/2", )
-        print(response.content)
+        # print(response.content)
 
         Assertions.assert_json_has_key(response, "username")
         Assertions.assert_json_has_not_key(response, "email")
         Assertions.assert_json_has_not_key(response, "firstName")
         Assertions.assert_json_has_not_key(response, "lastName")
 
+    @allure.description("Get user info with authorized request")
     def test_get_user_details_auth_as_same_user(self):
         data = {
             'email': 'vinkotov@example.com',
@@ -29,6 +32,5 @@ class TestUserGet(BaseCase):
                                  headers={"x-csrf-token": token},
                                  cookies={"auth_sid": auth_sid}
                                  )
-
         expected_fields = ["username", "email", "firstName", "lastName"]
         Assertions.assert_json_has_keys(response2, expected_fields)
