@@ -10,6 +10,12 @@ from lib.assertions import Assertions
 
 @allure.epic("Registration cases")
 class TestUserRegister(BaseCase):
+    broken_email = {
+        "@example.com",
+        "vinkotovexample.com",
+        "vinkotov@com",
+        "vinkotov@example"
+    }
     @allure.description("Create user successfully")
     def test_create_user_successfully(self):
         data = self.prepare_registration_data()
@@ -17,7 +23,6 @@ class TestUserRegister(BaseCase):
 
         Assertions.assert_code_status(response, 200)
         Assertions.assert_json_has_key(response, "id")
-        # print(response.content)
 
     @allure.description("Create user with existing email")
     def test_create_user_with_existing_email(self):
@@ -40,6 +45,16 @@ class TestUserRegister(BaseCase):
 
         response = MyRequests.post("/user/", data=data)
 
+        Assertions.assert_code_status(response, 400)
+        assert response.content.decode("utf-8") == f"Invalid email format",\
+            f"Invalid email format in the {email}"
+
+    @allure.description("User not able to register with an email that does not have one of the necessary components")
+    @pytest.mark.parametrize('email', broken_email)
+    def test_without_one_parametr(self, email):
+        data = self.prepare_registration_data(email)
+
+        response = MyRequests.post("/user/", data=data)
         Assertions.assert_code_status(response, 400)
         assert response.content.decode("utf-8") == f"Invalid email format",\
             f"Invalid email format in the {email}"

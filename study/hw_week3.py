@@ -1,5 +1,6 @@
 import pytest
 import requests
+import json
 from json.decoder import JSONDecodeError
 
 class TestPhraseTerminal:
@@ -43,12 +44,19 @@ class TestPhraseTerminal:
     #     assert parsed_response_text == expected_header, \
     #         f"The value of the actual header {parsed_response_text} doesn't match the expected value {expected_header}"
 
+    # Uses-Agent = [
+    #     ("platform"),
+    #     ("browser = [
+    #     ("Chrome"),
+    #     ("Firefox"),
+    #     ("Unknown")
+    # ]
+
+
     # @pytest.mark.parametrize('condition', exclude_params)
     def test_user_agent(self):
         url = "https://gist.github.com/KotovVitaliy/138894aa5b6fa442163561b5db6e2e26"
         data = 'User Agent'
 
         response = requests.get(url, params=data)
-        print(response.cookies)
-        parced_response_text = response.json()
-        print(parced_response)
+        print(response.headers)
